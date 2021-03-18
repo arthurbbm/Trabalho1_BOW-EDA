@@ -1,5 +1,0 @@
-Flavio : 2
-Lucas : 1
-John : 0
-Vieira : 0
-Arthur : 1
