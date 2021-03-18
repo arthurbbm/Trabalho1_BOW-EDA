@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "bow.c"
 
 
 //Menu
@@ -12,9 +13,6 @@
     //Mostrar similaridade entre os dois textos
     //Sair
 
-FILE *Arquivo_AbreLeitura(char *PNomeArquivo){
-    return fopen(PNomeArquivo,"r");
-}
 
 int main(int argc, const char * argv[]) {
     char NomeArq[30] = "";
@@ -45,7 +43,7 @@ int main(int argc, const char * argv[]) {
                 scanf("%s",NomeArq);
                 if(Dicionario != NULL)
                     fclose(Dicionario);
-                Dicionario = Arquivo_AbreLeitura(NomeArq);
+                Dicionario = fopen(NomeArq,"r");
                 if(Dicionario == NULL){
                     printf("Erro 2: Arquivo de Especificação de Dicionario não pode ser aberto\n");
                     break;
@@ -57,34 +55,23 @@ int main(int argc, const char * argv[]) {
                     if(c == EOF) break;
                     if(c == '\n') sizeCont++;
                 }
-                ContA = (int*) malloc(sizeof(int) * sizeCont);
-                ContB = (int*) malloc(sizeof(int) * sizeCont);
-                printf("%d", sizeCont);
+                ContA = malloc(sizeof(int) * sizeCont);
+                ContB = malloc(sizeof(int) * sizeCont);
 
                 break;
 
             case 'A':
                 printf("Arquivo de Referência: ");
                 scanf("%s",NomeArq);
-                if(TRA != NULL)
-                    fclose(TRA);
-                TRA = Arquivo_AbreLeitura(NomeArq);
-                if(TRA == NULL){
-                    printf("Erro 1: Arquivo de Referência não pode ser aberto\n");
-                }
-                printf("%s aberto!!!\n", NomeArq);
+                bow(NomeArq, Dicionario, "bowA.txt", ContA);
+
                 break;
 
             case 'B':
                 printf("Arquivo de Referência: ");
                 scanf("%s",NomeArq);
-                if(TRB != NULL)
-                    fclose(TRB);
-                TRB = Arquivo_AbreLeitura(NomeArq);
-                if(TRB == NULL){
-                    printf("Erro 1: Arquivo de Referência não pode ser aberto\n");
-                }
-                printf("%s aberto!!!\n", NomeArq);
+                bow(NomeArq, Dicionario, "bowB.txt", ContB);
+
                 break;
 
             /*
