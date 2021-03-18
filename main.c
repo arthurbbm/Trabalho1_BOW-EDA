@@ -1,133 +1,40 @@
-#include <stdio.h>
+# include <stdio.h>
+# include "menu.h"
+# include "functions.h"
 
+#define MAX_WORD 30
 
-//Menu
-    //D
-        //Ler arquivo Dicionário
-    //TRA
-        //Criação do bowA.txt
-            //
-    //TRB
-    //Exibir BOW
-    //Mostrar similaridade entre os dois textos
-    //Sair
+// =======================================  ProtÃ³tipos ==================================================
+void exclui_arquivo();
 
-FILE *Arquivo_AbreLeitura(char *PNomeArquivo){
-    return fopen(PNomeArquivo,"r");
-}
+// ===========================================  Main ===================================================
+int main()
+{
+	char opcao;
 
-int main(int argc, const char * argv[]) {
-    char NomeArq[30] = "";
-    int *ContA, *ContB;
-    FILE *TRA = NULL;
-    FILE *TRB = NULL;
-    FILE *Dicionario= NULL;
-    //FILE *bowA= NULL;
-    //FILE *bowA= NULL;
-    char popc = '0';
-    char c;
-    int sizeCont = 0;
+	char arq_dic[MAX_WORD], arq_bowa[MAX_WORD], arq_bowb[MAX_WORD];
+	char arq_tra[MAX_WORD], arq_trb[MAX_WORD];
 
-    while(popc != 'S'){
-        printf("\n################## ENTIDADES NOMEADAS ##################");
-        printf("\n");
-        printf("\nA - Selecionar Arquivo de Referência A");
-        printf("\nB - Selecionar Arquivo de Referência B");
-        printf("\nD - Selecionar Arquivo de Especificação de Dicionário");
-        printf("\ne - Exibir Arquivo de BOWs");
-        printf("\nt - Exibir similaridades entre TRA e TRB");
-        printf("\nS - Sair");
-        printf("\nOpção: ");
-        scanf("\n%c", &popc);
-        switch (popc) {
-            case 'D':
-                printf("Arquivo de Especificação de Dicionário: ");
-                scanf("%s",NomeArq);
-                if(Dicionario != NULL)
-                    fclose(Dicionario);
-                Dicionario = Arquivo_AbreLeitura(NomeArq);
-                if(Dicionario == NULL){
-                    printf("Erro 2: Arquivo de Especificação de Dicionario não pode ser aberto\n");
-                    break;
-                }
+	int qtde_dic = 0;
+	int *contA, *contB;
 
-                // Conta o número de palavras no Dicionário
-                while(1) {
-                    c = fgetc(Dicionario);
-                    if(c == EOF) break;
-                    if(c == '\n') sizeCont++;
-                }
-                ContA = (int*) malloc(sizeof(int) * sizeCont);
-                ContB = (int*) malloc(sizeof(int) * sizeCont);
-                printf("%d", sizeCont);
+	do
+	{
+		menu ();
+		opcao =  valida_op();
+		switch (opcao)
+		{
 
-                break;
+			case '1': selecionar_dicionario(arq_dic, &qtde_dic, &contA, &contB); 	break;
+			case '2': selecionar_tra(arq_dic, arq_tra, contA);   			        break;
+			case '3': selecionar_trb(arq_dic, arq_trb, contB);	     			    break;
+            case '4': exibir_bow_tr(qtde_dic);					         			break;
+            case '5': dist_euclid(contA, contB, qtde_dic);							break;
+			// case '6': exclui_arquivo(&qtde_dic);
+		}
+	} while (opcao != '0');
+	printf ("\n\n\n\n---> Finalizando programa.........")	;
+	printf ("\n________________________________________________________________________________\n\n");
+	return 0;
 
-            case 'A':
-                printf("Arquivo de Referência: ");
-                scanf("%s",NomeArq);
-                if(TRA != NULL)
-                    fclose(TRA);
-                TRA = Arquivo_AbreLeitura(NomeArq);
-                if(TRA == NULL){
-                    printf("Erro 1: Arquivo de Referência não pode ser aberto\n");
-                }
-                printf("%s aberto!!!\n", NomeArq);
-                break;
-
-            case 'B':
-                printf("Arquivo de Referência: ");
-                scanf("%s",NomeArq);
-                if(TRB != NULL)
-                    fclose(TRB);
-                TRB = Arquivo_AbreLeitura(NomeArq);
-                if(TRB == NULL){
-                    printf("Erro 1: Arquivo de Referência não pode ser aberto\n");
-                }
-                printf("%s aberto!!!\n", NomeArq);
-                break;
-
-            /*
-            case 'r':
-                if(!Arquivo_MostraConteudo(AR)){
-                    printf("Arquivo de Referência não está carregado\n");
-                }
-                break;
-            case 't':
-                if(!Arquivo_MostraConteudo(Token)){
-                    printf("Arquivo de Especificação de Token não está carregado\n");
-                }
-                break;
-            case 'A':
-                printf("Arquivo de Saída: ");
-                scanf("%s",NomeArq);
-                if(Saida != NULL)
-                    fclose(Saida);
-                Saida = Arquivo_Novo(NomeArq);
-                if(Saida == NULL){
-                    printf("Erro 3: Arquivo de Saída não pode ser criado\n");
-                }
-                //Faça a chamada às funções que vc criou para aplicar a Tokenização aqui.
-                //Ao final: Feche o arquivo de saída. Abra-o em modo de leitura e mostre seu
-                //conteúdo.
-
-
-                printf("%s gerado!!!\n", NomeArq);
-                break;
-            */
-
-            case 'S':
-                break;
-        }
-        if(popc == 'S')
-            break;
-    }
-
-    fclose(TRA);
-    fclose(TRB);
-    fclose(Dicionario);
-    //fclose(Saida);
-    printf("\n\n ----- Sistema Encerrado ----- \n\n");
-
-    return 0;
 }
