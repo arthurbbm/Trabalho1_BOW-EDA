@@ -49,6 +49,8 @@ void selecionar_tra(char *arq_dic, char *arq_tra, int *contA)//O(n^3)
 	fgets (arq_tra, MAX_WORD, stdin); //O(n)
 	valida_string(arq_tra); //O(n)
 
+	printf("\tnome trA: %s\n", arq_tra);//O(1)
+
 	FILE *p_tra  = abrir_arquivo(arq_tra, 'r');//O(1)
 	FILE *p_dic = abrir_arquivo(arq_dic, 'r');//O(1)
 	FILE *p_bow = abrir_arquivo("bowA.txt", 'w');//O(1)
@@ -66,6 +68,8 @@ void selecionar_trb(char *arq_dic, char *arq_trb, int *contB)//O(n^3)
 	fgets (arq_trb, MAX_WORD, stdin); //O(n)
 	valida_string(arq_trb);//O(n)
 
+	printf("\tnome trB: %s\n", arq_trb);//O(1)
+
 	FILE *p_trb = abrir_arquivo(arq_trb, 'r');//O(1)
 	FILE *p_dic = abrir_arquivo(arq_dic, 'r');//O(1)
 	FILE *p_bow = abrir_arquivo("bowB.txt", 'w');//O(1)
@@ -75,6 +79,10 @@ void selecionar_trb(char *arq_dic, char *arq_trb, int *contB)//O(n^3)
 	fclose(p_trb); //O(1)
 	fclose(p_dic); //O(1)
 	fclose(p_bow); //O(1)
+
+	printf("\n_____________________________________________________\n");//O(1)
+	printf ("\n---> Arquivo selecionado com sucesso, aperte qualquer tecla para voltar..");//O(1)
+	getchar();//O(1)
 }
 //===========================================================================================================
 void exibir_tabela(char *arq_dic,int contA[], int contB[])//O(n^2)
@@ -83,14 +91,17 @@ void exibir_tabela(char *arq_dic,int contA[], int contB[])//O(n^2)
 	int cont = 0;//O(1)
 	int i=0;//O(1)
 
+    //system("tput reset");//O(1)
+	system ("cls");//O(1)
 	FILE *p_file = abrir_arquivo(arq_dic, 'r');//O(1)
 
-	printf("\n_____________________________________________________\n\n");//O(1)
-	printf ("PALAVRAS|\t   |Texto A|\t\t   |Texto B|\n");//O(1)
+	printf("\n==========================================================\n");//O(1)
+	printf ("   |PALAVRAS|\t      |Texto A|\t\t      |Texto B|\n");//O(1)
+	printf("==========================================================\n");//O(1)
 	while(!feof(p_file))//O(n)
 	{
 		if(fscanf(p_file, "%s", buff) == EOF)  break; //O(n^2)
-			printf("%s\t\t\t%d\t\t\t%d \n",buff, contA[i], contB[i]);//O(n)
+			printf("%-20s\t%3d\t\t\t%3d \n",buff, contA[i], contB[i]);//O(n)
 		cont++;//O(n^2)
 		i++;//O(n^2)
 	}
@@ -101,7 +112,7 @@ void exibir_tabela(char *arq_dic,int contA[], int contB[])//O(n^2)
 	fclose(p_file);//O(1)
 }
 //===========================================================================================================
-void exibir_bow_tr(int qtde_dic)//O(n^2)
+void exibir_bow_tr(char* arq_dic,char* arq_tra,char* arq_trb)//O(n^2)
 {
 	char op, controle; //O(1)
 	char nome_arquivo[MAX_WORD]; //O(1)
@@ -112,17 +123,16 @@ void exibir_bow_tr(int qtde_dic)//O(n^2)
 		system("cls"); //O(n)
 		puts ("\n================================================================================================"); //O(n)
 		puts("\n\t==>>  Listar arquivos\n\n"); //O(n)
+		puts ("===============================================================================\n\n"); //O(n)
 
 		puts ("\t	1. Exibir bowA.txt");//O(n)
 		puts ("\t	2. Exibir bowB.txt");//O(n)
 		puts ("\t	3. Exibir tra.txt");//O(n)
 		puts ("\t	4. Exibir trb.txt");//O(n)
 		puts ("\t	5. Exibir Dicionario");//O(n)
-		puts ("\t	6. contA");//O(n)
-		puts ("\t	7. contB");//O(n)
 		puts ("\t	0. voltar menu inicial");//O(n)
 
-		printf("\n\tSelecione uma opcao [0-7]: _\b");//O(n)
+		printf("\n\tSelecione uma opcao [0-5]: _\b");//O(n)
 		scanf(" %c%*[^\n]",&op);//O(n^2)
 
 		switch (op) //O(n)
@@ -136,21 +146,15 @@ void exibir_bow_tr(int qtde_dic)//O(n^2)
 				break;
 
 			case '3':
-				strcpy (nome_arquivo, "tra.txt");//O(n^2)
+				strcpy (nome_arquivo, arq_tra);//O(n^2)
 				break;
 
 			case '4':
-				strcpy (nome_arquivo, "trb.txt");//O(n^2)
+				strcpy (nome_arquivo, arq_trb);;//O(n^2)
 				break;
 
 			case '5':
-				strcpy (nome_arquivo, "dic1.txt");//O(n^2)
-				break;
-
-			case '6':
-				break;
-
-			case '7':
+				strcpy (nome_arquivo, arq_dic);//O(n^2)
 				break;
 
 			default :
@@ -187,7 +191,7 @@ void valida_string(char *p_string)//O(n)
 
 		if (strlen(p_string) == 0 ) {//O(n)        	// Verifica se existe a string esta vazia
 			printf ("\n\tVoce nao pode deixar este campo em branco..\n");//O(1)
-			getchar();//O(1)
+			fgets (p_string, MAX_WORD, stdin);//O(n)
 		}
 	}
 }
@@ -244,7 +248,8 @@ void exportar_bow(FILE *p_tr, FILE *p_dic, FILE *p_bow, int cont[])//O(n^3)
         memcpy(bow->bow_word, dic_word, sizeof(bow));//O(n^2)
         bow->bow_ocurr = ocurr;//O(n)
 
-		fprintf(p_bow,"%s : %d\n", bow->bow_word , bow->bow_ocurr);//O(n)
+        if (bow->bow_ocurr)
+            fprintf(p_bow,"%s : %d\n", bow->bow_word , bow->bow_ocurr);//O(n)
 
 		cont[i] = ocurr;//O(n)
 
@@ -252,6 +257,7 @@ void exportar_bow(FILE *p_tr, FILE *p_dic, FILE *p_bow, int cont[])//O(n^3)
 		i++;//O(n^2)
         rewind (p_tr);//O(n^2)
     }
+    free(bow);//O(1)
 }
 //===========================================================================================================
 void dist_euclid(int contA[], int contB[], int qtde_dic)//O(n^2)
@@ -260,25 +266,6 @@ void dist_euclid(int contA[], int contB[], int qtde_dic)//O(n^2)
     float gdistance=0;//O(1)
     float sum = 0;//O(1)
     double euc;//O(1)
-
-    //system("tput reset");//O(1)
-    system("cls");//O(1)
-    printf("\n==================================================\n");//O(1)
-    printf("\n\t==>>  Vetores BOW\n\n");//O(1)
-
-    printf("contA = {");//O(1)
-
-    for( i = 0; i < qtde_dic; i++)//O(n)
-        printf(" %d, ",contA[i]);//O(n)
-
-    printf("}\n");//O(1)
-    printf("contB = {");//O(1)
-
-    for( i = 0; i < qtde_dic; i++)//O(n)
-        printf(" %d, ",contB[i]);//O(n)
-
-    printf("}\n");//O(1)
-
 
     for (i = 0; i < qtde_dic; ++i)//O(n)
     {
