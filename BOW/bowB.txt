@@ -1,0 +1,5 @@
+Flavio : 2
+Lucas : 1
+Arthur : 1
+outra : 1
+palavra : 1
