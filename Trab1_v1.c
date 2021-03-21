@@ -60,7 +60,7 @@ int main(){
 	    fprintf(fp_bow,"%s : %d\n", bow->bow_word , bow->bow_ocurr); 
 
 	    printf("WORD :%s \n", bow->bow_word);
-	    printf("OCCUR:%d  \n", bow->bow_ocurr);
+	    printf("OCCUR :%d  \n", bow->bow_ocurr);
 
 
 	    ocurr = 0;
