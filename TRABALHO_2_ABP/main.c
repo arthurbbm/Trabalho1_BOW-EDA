@@ -2,12 +2,18 @@
 #include <stdlib.h>
 
 #define MAX 15
+#define max(a,b) \
+({ __typeof__ (a) _a = (a); \
+    __typeof__ (b) _b = (b); \
+    _a > _b ? _a : _b; })
+
 
 struct node
 {
     int data; //node will store an integer
     struct node *right_child; // right child
     struct node *left_child; // left child
+    int FatBal;
 };
 
 struct node* search(struct node *root, int x)
@@ -38,6 +44,7 @@ struct node* new_node(int x)
     p->data = x;
     p->left_child = NULL;
     p->right_child = NULL;
+    p->FatBal = NULL;
 
     return p;
 }
@@ -45,13 +52,16 @@ struct node* new_node(int x)
 struct node* insert(struct node *root, int x)
 {
     //searching for the place to insert
-    if(root==NULL)
+    if(root==NULL) {
         return new_node(x);
-    else if(x>root->data) // x is greater. Should be inserted to right
+    }
+    else if(x>root->data) {// x is greater. Should be inserted to right
         root->right_child = insert(root->right_child, x);
-    else // x is smaller should be inserted to left
+    }
+    else if(x<root->data)// x is smaller should be inserted to left
         root->left_child = insert(root->left_child,x);
-    return root;
+    else
+        return root;
 }
 
 // funnction to delete a node
@@ -101,9 +111,34 @@ void inorder(struct node *root)
     if(root!=NULL) // checking if the root is not null
     {
         inorder(root->left_child); // visiting left child
-        printf(" %d ", root->data); // printing data at root
+        printf("Chave: %d; FB: %d\n", root->data, root->FatBal); // printing data at root
         inorder(root->right_child);// visiting right child
     }
+}
+
+int height(struct node *root) {
+    if (root == NULL) return -1;
+    else {
+        int left_height, right_height;
+        left_height = height(root->left_child);
+        right_height = height(root->right_child);
+
+        return max(left_height, right_height) + 1;
+    }
+}
+
+void FB(struct node *root) {
+    if(root == NULL) return;
+
+    int fb, left_height, right_height;
+
+    left_height = height(root->left_child);
+    right_height = height(root->right_child);
+    fb = left_height - right_height;
+    root->FatBal = fb;
+
+    FB(root->left_child);
+    FB(root->right_child);
 }
 
 void main()
@@ -135,6 +170,8 @@ int i = 0, cont = 0;
             if (i == 0)
             {
                 root = new_node(vector[0]);
+                i++;
+                continue;
             }
             // printf (" %d ", vector[i]);
             insert(root,vector[i]);
@@ -143,6 +180,7 @@ int i = 0, cont = 0;
 
     fclose(p_file);
 
+    FB(root);
     inorder(root);
 
  
