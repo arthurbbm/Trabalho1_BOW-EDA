@@ -1,43 +1,43 @@
 #include <stdio.h> 
 #include <stdlib.h>
+#include <string.h>
 #include "abp.h" 
 
 //==============================================================================================
 int create_tree()
 {
-    int i = 0, cont = 0;
+    int tmp, n = 0;
+    char linha[1000];
 
-    FILE* p_file;
-    p_file = fopen ("Teste_A","r");
-    printf ("abriu teste A");
+    FILE *pFile = fopen("testA.csv", "r");
 
-    while(!feof(p_file))
-    {   
-        char buf[MAX];
-        fgets(buf, MAX, p_file);
-        cont++;
+    if(pFile == NULL)
+    {
+        printf("Erro ao abrir o arquivo.");
+        exit(1);
     }
-    fclose(p_file);
-    printf ("\n cont %d \n", cont);
+    
+    fgets(linha, sizeof(linha),pFile);
 
-    int vector[cont];
+    char *token;
+    token = strtok(linha, ",");
 
-    p_file = fopen ("Teste_A","r");
+    while (token != NULL) 
+    {
+        tmp = atoi(token);
+        if(raiz == NULL)
+            raiz = new_node(tmp);
+        
+        else 
+            insert(raiz, tmp);
 
-        while( (fscanf (p_file, "%d", &vector[i]) ) != EOF) 
-        {
-            if (i == 0)
-            {
-                raiz = new_node(vector[0]);
-                i++;
-                continue;
-            }
-            insert(raiz, vector[i]);
-            i++;
-        }
-        fatBal(raiz);
+        token = strtok(NULL,",");
+        n++;
+    }
+    fclose(pFile);
+    fatBal(raiz);
    
-   return cont;
+   return n;
 }
 
 //==============================================================================================
@@ -49,6 +49,8 @@ NO *new_node(int x)
     p->pEsq = NULL;
     p->pDir = NULL;
     p->fb = 0;
+
+    printf("p->chave = %d\n", p->chave);
 
     return p;
 }
@@ -76,7 +78,8 @@ void print_inorder(NO *p)
     }
 }
 //==============================================================================================
-int height(NO *t) {
+int height(NO *t)
+{
     if (t == NULL) return -1;
     else 
     {
@@ -89,7 +92,8 @@ int height(NO *t) {
     }
 }
 //==============================================================================================
-void fatBal(NO *t) {
+void fatBal(NO *t) 
+{
     if(t == NULL) return;
 
     int fb, lh, rh;
@@ -103,3 +107,18 @@ void fatBal(NO *t) {
     fatBal(t->pDir);
 }
 //==============================================================================================
+void clear_tree(NO *d)
+{
+    if(d != NULL)
+    {
+        clear_tree(d->pEsq);
+        clear_tree(d->pDir);
+        printf("desalocar %d\n", d->chave);
+        
+        free(d);
+    }
+}
+//==============================================================================================
+
+    
+    

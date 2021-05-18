@@ -26,9 +26,11 @@ int create_tree();
 NO *insert(NO *t, int x);
 NO *new_node(int x);
 void fatBal(NO *t);
+void clear_tree(NO *d);
 
 
 //==============================================================================================
 
 #endif  
+
 

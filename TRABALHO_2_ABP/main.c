@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include  "abp.h"
 
 //------------------------------- Prototipos --------------------------------------------
@@ -17,23 +18,27 @@ void menu          (void);
 char leValidaOpcao (void);
 void gerarABP      (void);
 void imprimir      (void);	
-void sair          (void);	
+void sair          (void);
+void limpar_raiz   (void);	
 // ---------------------------------------------------------------------------------------
 
 int main(int argc, char**argv)
 {
 	char opcao;
+	raiz = NULL;
 	do
 	{
 		menu ();
 		opcao =  leValidaOpcao ();
 		switch (opcao)
 		{
-			case '1': gerarABP  ();	break;
-			case '2': imprimir  ();	break;
-			case '3': sair      (); break;
+			case '1': gerarABP   ();  break;
+			case '2': imprimir   ();  break;
+			case '3': limpar_raiz();  break;
+			case '4': sair       ();  break;
+
 		}
-	} while (opcao != '3');
+	} while (opcao != '4');
 	
 	return 0;
 }
@@ -54,7 +59,8 @@ void menu (void)
 	puts ("\t |                                     |");
 	puts ("\t |  1. Gerar arvore binaria ABP        |");
 	puts ("\t |  2. Imprimir arvore binaria ABP     |");
-	puts ("\t |  3. Sair e desalocar                |");
+	puts ("\t |  3. Limpar arvore binaria ABP       |");
+	puts ("\t |  4. Sair e desalocar                |");
 	puts ("\t |                                     |");
     puts ("\t +-------------------------------------+");
 
@@ -65,17 +71,17 @@ char leValidaOpcao (void)
 	char op, controle;
 	do
 	{
-		printf ("\n\tSelecione uma opcao [1-3]: _\b");
+		printf ("\n\tSelecione uma opcao [1-4]: _\b");
 		op = getchar(); 
 		getchar();
 
-		if (op <'0' || op > '3')
+		if (op <'0' || op > '4')
 		{
 			printf ("\t ** Opcao invalida! **");
 			getchar();
 		}
 		else
-			if (op == '3')
+			if (op == '4')
 			{
                 puts ("\n\n===============================================================================\n");
 				printf("\tDeseja realmente sair? \n\t[S] -> Sim - [Outra tecla] -> Retornar: _\b");
@@ -103,12 +109,9 @@ void gerarABP(void)
 
 	puts ("\n===============================================================================");
 	puts("\n\t==>>  Gerar Arvore Binaria de Pesquisa\n");
-
    
     int n;
-    n = create_tree();
-    printf("Nos arvore = %d", n);
-
+  	n = create_tree();
 
 	
 	puts ("\n\n\n ** Arvore gerada com sucesso!!\n");
@@ -123,11 +126,9 @@ void imprimir(void)
 	//system ("cls");
 	puts ("\n===============================================================================");
 	puts("\n\t==>>  Impressao Arvore Binaria ABP\n");
-
-	// fatBal(raiz);
 	
-	if (0)
-		puts (" Fila Vazia !");
+	if(raiz == NULL)
+		printf("Arvore vazia.\n");
 	else
 		print_inorder(raiz);	
 
@@ -141,6 +142,13 @@ void sair(void)
     system("tput reset");
 	//system ("cls");
 
+	if(raiz)
+	{
+		printf("Liberando Memoria alocada!\n");
+		limpar_raiz();
+
+	}
+
     puts ("\n===============================================================================");
 	puts("\n\t==>>  Saindo.....\n");
 	
@@ -149,6 +157,9 @@ void sair(void)
 	puts ("===============================================================================");
 	getchar();
 }
-
-
-
+//---------------------------------------------------------------------------------------------------------------------------------------
+void limpar_raiz ()
+{
+	clear_tree(raiz);
+	raiz = NULL;
+}
